@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="bg-primary-50 dark:bg-gray-900 flex h-screen flex-col">
       <Header />

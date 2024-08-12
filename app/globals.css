@@ -81,7 +81,13 @@ body {
   filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(217%)
     hue-rotate(32deg) brightness(98%) contrast(92%);
 }
-
+.border-gradient {
+  border-radius: 8px;
+  border-width: 2px;
+  border-style: solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+}
 /* ========================================== TAILWIND STYLES */
 @layer utilities {
   .wrapper {
@@ -98,6 +104,7 @@ body {
   .logo-gradient {
     @apply bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500;
   }
+
   /* TYPOGRAPHY */
   /* 64 */
   .h1-bold {

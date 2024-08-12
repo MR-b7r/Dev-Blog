@@ -26,11 +26,7 @@ export default function RootLayout({
       <body
         className={(cn("bg-primary-50 dark:bg-gray-900"), poppins.variable)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          storageKey="theme"
-        >
+        <ThemeProvider attribute="class" storageKey="theme">
           {children}
         </ThemeProvider>
       </body>

@@ -7,17 +7,21 @@ declare type SearchParamProps = {
 
 // ========================================
 
+declare type User = {
+  _id: string;
+  username: string;
+  email: string;
+  password: string;
+  profilePicture: string;
+  __v: number;
+};
+
 declare type SignUpParams = {
   username: string;
   email: string;
   password: string;
 };
 declare type SignInParams = {
-  email: string;
-  password: string;
-};
-
-declare type LoginUser = {
   email: string;
   password: string;
 };

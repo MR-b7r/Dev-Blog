@@ -3,18 +3,30 @@
 import { authFormSchema, handleError } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import CustomForm from "./CustomForm";
 import { Loader2 } from "lucide-react";
-import { signIn, signUp } from "@/lib/actions/user.actions";
+import { userSignIn, userSignUp } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  signEnd,
+  signFailure,
+  signStart,
+  signSuccess,
+} from "@/lib/features/user/userSlice";
+
+import OAuth from "./OAuth";
 
 const AuthForm = ({ type }: { type: string }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const { loading, error: errorMessage } = useAppSelector(
+    (state) => state.user
+  );
   const router = useRouter();
   const formSchema = authFormSchema(type);
   // 1. Define the form.
@@ -28,8 +40,8 @@ const AuthForm = ({ type }: { type: string }) => {
 
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
     try {
+      dispatch(signStart());
       // Sign up
       if (type === "sign-up") {
         const userData = {
@@ -37,27 +49,27 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         };
-        const newUser = await signUp(userData);
-        const response = await signIn({
+        await userSignUp(userData);
+        const response = await userSignIn({
           email: data.email,
           password: data.password,
         });
-        console.log(response);
+        dispatch(signSuccess(response));
         if (response) router.push("/");
       }
-
       // Sign In
       if (type === "sign-in") {
-        const response = await signIn({
+        const response = await userSignIn({
           email: data.email,
           password: data.password,
         });
+        dispatch(signSuccess(response));
         if (response) router.push("/");
       }
     } catch (error) {
-      handleError(error);
+      dispatch(signFailure(handleError(error)));
     } finally {
-      setIsLoading(false);
+      dispatch(signEnd());
     }
   };
   return (
@@ -108,11 +120,11 @@ const AuthForm = ({ type }: { type: string }) => {
               />
               <div className="flex flex-col gap-4 ">
                 <Button
-                  disabled={isLoading}
+                  disabled={loading}
                   type="submit"
                   className="text-16 rounded-lg  logo-gradient font-semibold text-white"
                 >
-                  {isLoading ? (
+                  {loading ? (
                     <>
                       <Loader2 size={20} className="animate-spin" /> &nbsp;
                       Loading...
@@ -123,6 +135,8 @@ const AuthForm = ({ type }: { type: string }) => {
                     "Sign Up"
                   )}
                 </Button>
+
+                <OAuth />
               </div>
             </form>
           </Form>
