@@ -88,3 +88,35 @@ export const authFormSchema = (type: string) =>
     email: z.string().email(),
     password: z.string().min(8),
   });
+export const updateProfile = () =>
+  z.object({
+    username: z
+      .string()
+      .optional()
+      .refine((value) => !value || value.length >= 8, {
+        message: "Username must be at least 8 characters long or left empty.",
+      }),
+    email: z.string().email().optional(),
+    password: z
+      .string()
+      .optional()
+      .refine((value) => !value || value.length >= 8, {
+        message: "Password must be at least 8 characters long or left empty.",
+      }),
+    profilePicture: z
+      .custom<File>(
+        (file) => {
+          if (!file) return true; // Allow it to be optional
+          const validTypes = ["image/jpeg", "image/png", "image/gif"];
+          const maxSizeInMB = 2;
+          const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+
+          return validTypes.includes(file.type) && file.size <= maxSizeInBytes;
+        },
+        {
+          message:
+            "Invalid file. Must be an image (JPEG, PNG, GIF) and less than 2MB.",
+        }
+      )
+      .optional(),
+  });

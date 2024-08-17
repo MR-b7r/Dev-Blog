@@ -18,7 +18,7 @@ const OAuth = () => {
   return (
     <Button
       onClick={handleOAuth}
-      className={`text-16 rounded-lg font-semibold text-gray-900 dark:text-white dark:bg-gray-800 hover:logo-gradient`}
+      className={`text-16 rounded-lg font-semibold text-gray-900 bg-gray-200 dark:text-white dark:bg-gray-800 hover:logo-gradient `}
       disabled={loading}
     >
       <Image

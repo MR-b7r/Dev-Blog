@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function Home() {
   return (
     <div className="bg-primary-50 dark:bg-gray-900 flex h-screen flex-col">
-      <Header />
+      {/* <Header /> */}
       <section className="bg-dotted-pattern bg-contain py-5 md:py-10">
         <div className="wrapper grid grid-cols-1 gap-5 md:grid-cols-2 2xl:gap-0">
           <div className="flex flex-col justify-center gap-8">

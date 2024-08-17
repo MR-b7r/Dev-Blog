@@ -5,6 +5,7 @@ import mongoose, { Document, Schema } from "mongoose";
 //   email: string;
 //   password: string;
 //   profilePicture: string;
+//   isAdmin: boolean;
 // }
 const userSchema: Schema = new mongoose.Schema({
   username: {
@@ -25,6 +26,10 @@ const userSchema: Schema = new mongoose.Schema({
     type: String,
     default:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -62,7 +62,7 @@ export const userSignOut = async () => {
 
 export const google = async () => {
   try {
-    await signIn("google", { redirect: true });
+    await signIn("google", { redirect: false });
     const session = await auth();
     const response = await userSignIn(
       {
@@ -74,5 +74,56 @@ export const google = async () => {
     return parseStringify(response);
   } catch (error) {
     throw error;
+  }
+};
+
+export const updateUser = async (user: User) => {
+  try {
+    await connectMongo();
+    const { username, email, password, profilePicture } = user;
+    const newUser = {
+      username,
+      email,
+      password,
+      profilePicture,
+    };
+    if (user && user._id) {
+      const checkUser = await User.findById(user._id!);
+      if (!checkUser) return;
+      if (password !== null || password) {
+        const hashedPassword = bcryptjs.hashSync(password, 8);
+        newUser.password = hashedPassword;
+      }
+      if (username) {
+        const customizeUsername = username
+          .split(" ")
+          .join("")
+          .toLocaleLowerCase();
+        if (!customizeUsername.match(/^[a-zA-Z0-9]+$/))
+          throw new Error("username is not valid");
+        newUser.username = customizeUsername;
+      }
+    }
+    console.log(newUser);
+    const updateUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        $set: newUser,
+      },
+      { new: true }
+    );
+    return parseStringify(updateUser);
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const deleteUser = async (user: User) => {
+  try {
+    // && user.isAdmin
+    if (user && user?._id) {
+      const deletedUser = await User.findByIdAndDelete(user._id!);
+    }
+  } catch (error) {
+    handleError(error);
   }
 };

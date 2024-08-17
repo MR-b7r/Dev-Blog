@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { userSignOut } from "@/lib/actions/user.actions";
 import { signOutSuccess } from "@/lib/features/user/userSlice";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import Image from "next/image";
 
 const HeaderProfile = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +39,17 @@ const HeaderProfile = () => {
       {currentUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger>
-            {currentUser?.profilePicture || "profile"}
+            {currentUser?.profilePicture ? (
+              <img
+                src={currentUser?.profilePicture}
+                width={40}
+                height={40}
+                alt="profile"
+                className="rounded-full"
+              />
+            ) : (
+              "Profile"
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent className="absolute top-0 -right-10">
             <DropdownMenuLabel className="!font-normal !text-[13px]">
@@ -47,10 +58,13 @@ const HeaderProfile = () => {
             <DropdownMenuLabel>{currentUser.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <div className="flex items-center gap-1 w-full">
+              <Link
+                href={"/dashboard"}
+                className="flex items-center gap-1 w-full"
+              >
                 <UserIcon width={20} />
                 Profile
-              </div>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <div
