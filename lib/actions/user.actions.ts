@@ -1,11 +1,12 @@
 "use server";
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 import { connectMongo } from "@/lib/mongodb";
 import User from "@/models/user.model";
 import { handleError, parseStringify } from "../utils";
-import jwt from "jsonwebtoken";
 import { auth, signIn, signOut } from "../auth";
-import { persistor } from "../store";
+import { redirect } from "next/navigation";
 
 export const userSignUp = async (user: SignUpParams) => {
   try {
@@ -60,17 +61,27 @@ export const userSignOut = async () => {
   }
 };
 
+export const signDatabaseViaGoogle = async (email: string) => {
+  try {
+    await connectMongo();
+
+    const getUser = await User.findOne({ email });
+    if (!getUser) return console.error("Error with your Google account");
+    console.log(getUser);
+    return parseStringify(getUser);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const google = async () => {
   try {
-    await signIn("google", { redirect: false });
+    await signIn("google", { redirect: true });
     const session = await auth();
-    const response = await userSignIn(
-      {
-        email: session?.user?.email!,
-        password: session?.user?.password,
-      },
-      true
-    );
+    console.log(session?.user);
+    const response = await signDatabaseViaGoogle(session?.user?.email);
+    console.log(response);
+
     return parseStringify(response);
   } catch (error) {
     throw error;
@@ -81,30 +92,19 @@ export const updateUser = async (user: User) => {
   try {
     await connectMongo();
     const { username, email, password, profilePicture } = user;
-    const newUser = {
+    const newUser: UpdateUser = {
       username,
       email,
-      password,
       profilePicture,
     };
     if (user && user._id) {
       const checkUser = await User.findById(user._id!);
       if (!checkUser) return;
-      if (password !== null || password) {
+      if (password !== undefined || password) {
         const hashedPassword = bcryptjs.hashSync(password, 8);
         newUser.password = hashedPassword;
       }
-      if (username) {
-        const customizeUsername = username
-          .split(" ")
-          .join("")
-          .toLocaleLowerCase();
-        if (!customizeUsername.match(/^[a-zA-Z0-9]+$/))
-          throw new Error("username is not valid");
-        newUser.username = customizeUsername;
-      }
     }
-    console.log(newUser);
     const updateUser = await User.findByIdAndUpdate(
       user._id,
       {
@@ -122,6 +122,7 @@ export const deleteUser = async (user: User) => {
     // && user.isAdmin
     if (user && user?._id) {
       const deletedUser = await User.findByIdAndDelete(user._id!);
+      redirect("/");
     }
   } catch (error) {
     handleError(error);

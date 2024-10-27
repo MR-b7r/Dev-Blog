@@ -9,6 +9,7 @@ import HeaderProfile from "./HeaderProfile";
 import StoreProvider from "@/app/StoreProvider";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "@/lib/store";
+import SearchBar from "./SearchBar";
 const Navbar = () => {
   const [isCollapse, setIsCollapse] = useState(true);
 
@@ -28,26 +29,13 @@ const Navbar = () => {
                 Blog
               </Link>
               <div className="flex max-md:order-1">
-                <button
-                  type="button"
+                <Link
+                  href={"/search"}
                   className="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
                 >
                   <MagnifyingGlassIcon type="button" className="w-5 h-5 " />
-                </button>
-
-                <div className="relative hidden md:block">
-                  <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <MagnifyingGlassIcon
-                      type="button"
-                      className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    />
-                  </div>
-                  <input
-                    type="text"
-                    className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="Search..."
-                  />
-                </div>
+                </Link>
+                <SearchBar />
 
                 <button
                   onClick={() => setIsCollapse(!isCollapse)}

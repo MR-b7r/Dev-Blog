@@ -32,7 +32,6 @@ const authConfig = {
             Math.random().toString(36).slice(-8) +
             Math.random().toString(36).slice(-8);
           const hashedPassword = bcryptjs.hashSync(generatedPassword, 8);
-          console.log(user);
           const newUser = await User.create({
             username:
               user.name.toLowerCase().split(" ").join("") +

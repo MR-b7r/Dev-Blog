@@ -8,21 +8,22 @@ import {
 import { Control, FieldPath } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { updateProfile } from "@/lib/utils";
+import { authFormSchema, postForm, updateProfile } from "@/lib/utils";
+import { FileUploader } from "./FileUploader";
 
-const formSchema = updateProfile();
+const formSchema = authFormSchema("sign-up") || updateProfile() || postForm();
 interface CustomFormProps {
   control: Control<z.infer<typeof formSchema>>;
   name: FieldPath<z.infer<typeof formSchema>>;
-  label: string;
+  label?: string;
   handleImageChange?: () => void;
+  type?: string;
   placeholder?: string;
   errorMessage?: string;
   children?: React.ReactNode;
 }
 const CustomForm = (props: CustomFormProps) => {
-  const { control, name, label, placeholder, errorMessage, handleImageChange } =
-    props;
+  const { control, name, label, placeholder, errorMessage, type } = props;
   return (
     <FormField
       control={control}
@@ -35,12 +36,7 @@ const CustomForm = (props: CustomFormProps) => {
           <div className="flex w-full flex-col">
             <FormControl>
               {name === "profilePicture" ? (
-                <Input
-                  type="file"
-                  accept="image/*"
-                  className="absolute top-0 right-0 w-full h-full bg-transparent opacity-0"
-                  onChange={handleImageChange}
-                />
+                <FileUploader onFieldChange={field.onChange} />
               ) : (
                 <Input
                   placeholder={placeholder}

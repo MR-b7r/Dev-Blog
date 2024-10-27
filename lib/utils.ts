@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
-
+import qs from "query-string";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -80,43 +80,95 @@ export const handleError = (error: unknown) => {
   console.error(error);
   throw new Error(typeof error === "string" ? error : JSON.stringify(error));
 };
+
+export const isUserNameValid = (username: string) => {
+  /* 
+    Usernames can only have: 
+    - Lowercase Letters (a-z) 
+    - Numbers (0-9)
+    - Dots (.)
+    - Underscores (_)
+  */
+  const res = /^[a-z0-9_\.]+$/.exec(username);
+  const valid = !!res;
+  return valid;
+};
+
+export const filterschema = () =>
+  z.object({
+    searchTerm: z.string(),
+    sort: z.string(),
+    category: z.string(),
+  });
 export const authFormSchema = (type: string) =>
   z.object({
     // sign-up
-    username: type === "sign-in" ? z.string().optional() : z.string().min(3),
+    username:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(3, "Username must be at least 3 characters long.")
+            .max(20, "Username must be at most 20 characters long.")
+            .regex(
+              /^[a-z0-9._]+$/,
+              "Username can only has lowercase letters (a-z), numbers (0-9), dots (.), and underscores (_)."
+            ),
     // both
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z
+      .string()
+      .refine((value) => value.length >= 8 && value.length <= 20, {
+        message: "Password must be between 8 and 20 characters long.",
+      }),
+    // password: z.string().min(8).max(20),
   });
+
 export const updateProfile = () =>
   z.object({
     username: z
       .string()
-      .optional()
-      .refine((value) => !value || value.length >= 8, {
-        message: "Username must be at least 8 characters long or left empty.",
-      }),
+      .min(3, "Username must be at least 3 characters long.")
+      .max(20, "Username must be at most 20 characters long.")
+      .regex(
+        /^[a-z0-9._]+$/,
+        "Username can only has lowercase letters (a-z), numbers (0-9), dots (.), and underscores (_)."
+      ),
     email: z.string().email().optional(),
     password: z
       .string()
       .optional()
-      .refine((value) => !value || value.length >= 8, {
-        message: "Password must be at least 8 characters long or left empty.",
+      .refine((value) => !value || (value.length >= 8 && value.length <= 20), {
+        message:
+          "Password must be between 8 and 20 characters long or left empty.",
       }),
-    profilePicture: z
-      .custom<File>(
-        (file) => {
-          if (!file) return true; // Allow it to be optional
-          const validTypes = ["image/jpeg", "image/png", "image/gif"];
-          const maxSizeInMB = 2;
-          const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
-
-          return validTypes.includes(file.type) && file.size <= maxSizeInBytes;
-        },
-        {
-          message:
-            "Invalid file. Must be an image (JPEG, PNG, GIF) and less than 2MB.",
-        }
-      )
-      .optional(),
+    profilePicture: z.string().optional(),
   });
+
+export const postForm = () =>
+  z.object({
+    content: z.string().min(10, "Content must be at least 10 characters long."),
+    title: z.string().min(3, "Title must be at least 3 characters long."),
+    category: z.string().optional(),
+    image: z.string().optional(),
+  });
+
+interface UrlQueryParams {
+  params: string;
+  key: string;
+  value: string;
+}
+
+export function formUrlQuery({ params, key, value }: UrlQueryParams) {
+  const currentUrl = qs.parse(params);
+
+  currentUrl[key] = value;
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
+}

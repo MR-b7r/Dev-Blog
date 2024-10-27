@@ -6,8 +6,11 @@ import React from "react";
 import StoreProvider from "../../StoreProvider";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "@/lib/store";
+import DashPosts from "@/components/DashPosts";
 
-const page = () => {
+const page = ({ searchParams }: SearchParamProps) => {
+  const page = searchParams.tab || "profile";
+  const pageNumber = Number(searchParams.page || 1);
   return (
     <StoreProvider>
       <PersistGate persistor={persistor} loading={null}>
@@ -15,7 +18,8 @@ const page = () => {
           <div className="md:w-56">
             <DashSidebar />
           </div>
-          <DashProfile />
+          {page === "profile" && <DashProfile />}
+          {page === "posts" && <DashPosts pageNumber={pageNumber} />}
         </div>
       </PersistGate>
     </StoreProvider>

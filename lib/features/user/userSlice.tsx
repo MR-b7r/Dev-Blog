@@ -1,7 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+type currentUser = {
+  _id: string;
+  username: string;
+  email: string;
+  password: string;
+  profilePicture: string;
+  isAdmin: boolean;
+};
 interface InitialState {
-  currentUser: null;
+  currentUser: currentUser | null;
   error: string | null;
   loading: boolean;
 }

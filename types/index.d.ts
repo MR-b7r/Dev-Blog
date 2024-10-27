@@ -13,9 +13,55 @@ declare type User = {
   email: string;
   password: string;
   profilePicture: string;
-  __v: number;
+  isAdmin: boolean;
+};
+declare type Post = {
+  _id: string;
+  userId: string;
+  content: string;
+  title: string;
+  image: string;
+  category: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
+};
+declare type getPosts = {
+  startIndex: string;
+  limit: string;
+  order: string;
+};
+declare type EditPost = {
+  _id: string;
+  userId: string;
+  content: string;
+  title: string;
+  image: string;
+  category: string;
 };
 
+declare interface UpdateUser {
+  username: string;
+  email: string;
+  profilePicture: string;
+  password?: string; // Optional, can be added later
+}
+declare interface UpdatePost {
+  content: string;
+  title: string;
+  image: string;
+  category: string;
+}
+
+declare type CreatePost = {
+  content: string;
+  title: string;
+  image: string;
+  category: string;
+  userId: string;
+  username: string;
+};
 declare type SignUpParams = {
   username: string;
   email: string;
@@ -31,4 +77,10 @@ declare type NewUserParams = {
   email: string;
   name: string;
   password: string;
+};
+
+declare type searchFiterParams = {
+  searchTerm: string;
+  sort: string;
+  category: string;
 };

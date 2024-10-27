@@ -21,6 +21,7 @@ import {
 } from "@/lib/features/user/userSlice";
 
 import OAuth from "./OAuth";
+import toast from "react-hot-toast";
 
 const AuthForm = ({ type }: { type: string }) => {
   const dispatch = useAppDispatch();
@@ -54,6 +55,7 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         });
+        if (response) toast.success("A new Account created successfully");
         dispatch(signSuccess(response));
         if (response) router.push("/");
       }
@@ -63,17 +65,21 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         });
+        if (!response)
+          toast.error("cannot get the user. Email or Password is incorrect");
+
         dispatch(signSuccess(response));
         if (response) router.push("/");
       }
-    } catch (error) {
-      dispatch(signFailure(handleError(error)));
+    } catch (error: any) {
+      dispatch(signFailure(error.message));
+      toast.error(error.message);
     } finally {
       dispatch(signEnd());
     }
   };
   return (
-    <div className="min-h-screen mt-20 w-full">
+    <div className=" w-full">
       <div className="flex p-5 max-w-3xl mx-auto flex-col md:flex-row md:items-center md:gap-10 gap-7">
         {/* left */}
         <div className="md:flex-1">
@@ -135,11 +141,12 @@ const AuthForm = ({ type }: { type: string }) => {
                     "Sign Up"
                   )}
                 </Button>
-
-                <OAuth />
               </div>
             </form>
           </Form>
+          <div className="w-full my-3">
+            <OAuth />
+          </div>
           <div className="flex gap-2 text-sm mt-5">
             {type === "sign-in" ? (
               <>

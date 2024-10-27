@@ -14,11 +14,13 @@ export function ThemeSwitcher() {
   if (!mounted) return null;
 
   return (
-    <button
-      className="w-5 h-5 "
+    <div
+      className="p-2 border border-gray-300 rounded-full bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 duration-200 dark:border-gray-600  dark:text-white flex-center cursor-pointer"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
-      {theme === "light" ? <MoonIcon /> : <SunIcon />}
-    </button>
+      <button className="w-5 h-5 ">
+        {theme === "light" ? <MoonIcon /> : <SunIcon />}
+      </button>
+    </div>
   );
 }

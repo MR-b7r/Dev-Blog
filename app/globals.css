@@ -236,6 +236,37 @@ body {
   .toggle-switch {
     @apply bg-gray-300 !important;
   }
+
+  /* DATA TABLE */
+  .data-table {
+    @apply z-10 w-full overflow-hidden rounded-md bg-gray-100 dark:bg-gray-900;
+  }
+  .table-actions {
+    @apply flex w-full items-center justify-between space-x-2 p-4;
+  }
+  .shad-table {
+    @apply rounded-lg overflow-hidden !important;
+  }
+
+  .shad-table-row-header {
+    @apply border-b border-gray-100 dark:border-gray-900 hover:bg-transparent !important;
+  }
+
+  .shad-table-row {
+    @apply border-b  border-gray-100 dark:border-gray-900 !important;
+  }
+  .shad-gray-btn {
+    @apply border  cursor-pointer bg-gray-200 dark:bg-gray-800 dark:text-gray-100 text-gray-800 hover:bg-gray-300 dark:hover:bg-gray-900 !important;
+  }
+
+  /* SHAD DIALOG */
+  .shad-dialog {
+    @apply bg-gray-100 border-gray-200 dark:bg-gray-800 dark:border-gray-900 !important;
+  }
+
+  .shad-dialog button {
+    @apply focus:ring-0 focus:ring-offset-0 focus-visible:border-none focus-visible:outline-none focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
+  }
 }
 
 /* ========================================== CLERK STYLES */
@@ -281,4 +312,50 @@ body {
 
 .react-datepicker__time-list-item--selected {
   background-color: #624cf5 !important;
+}
+.toast {
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+}
+
+/* React quill */
+
+.ql-editor {
+  font-size: 1.05rem;
+}
+
+.post-content p {
+  margin-bottom: 0.5rem;
+}
+
+.post-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
+}
+
+.post-content h2 {
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
+}
+
+.post-content a {
+  color: rgb(73, 149, 199);
+  text-decoration: none;
+}
+
+.post-content a:hover {
+  text-decoration: underline;
+}
+
+.dark .post-content a {
+  color: red;
+}
+.ql-toolbar.ql-snow {
+  background-color: white !important;
 }
