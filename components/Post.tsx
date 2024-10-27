@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
+import CommentSection from "./CommentSection";
 const Post = ({ post }: { post: Post }) => {
   return (
     <>
@@ -36,7 +37,7 @@ const Post = ({ post }: { post: Post }) => {
         className="p-3 max-w-2xl mx-auto w-full post-content"
         dangerouslySetInnerHTML={{ __html: post && post.content }}
       ></div>
-      {/* <CommentSection postId={post._id} /> */}
+      <CommentSection postId={post._id} />
     </>
   );
 };

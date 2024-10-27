@@ -35,7 +35,6 @@ export const getPost = async (postId: string) => {
   try {
     await connectMongo();
     const post = await Post.findById(postId);
-    console.log(post);
     return parseStringify(post);
   } catch (error) {
     handleError(error);
@@ -84,7 +83,6 @@ export const getPosts = async (pageNumber?: number) => {
     const recentPosts = await Post.find({ createdAt: { $gte: oneMonthAgo } });
 
     allPosts = { ...allPosts, lastMonthPosts, recentPosts };
-    console.log(allPosts);
     return parseStringify(allPosts);
   } catch (error) {
     handleError(error);
@@ -102,7 +100,6 @@ export const getPostBySearch = async (searchInput: string) => {
     })
       .sort({ updatedAt: -1 })
       .limit(5);
-    console.log(posts);
     return parseStringify(posts);
   } catch (error) {
     handleError(error);

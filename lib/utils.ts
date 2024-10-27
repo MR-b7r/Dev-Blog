@@ -100,6 +100,13 @@ export const filterschema = () =>
     sort: z.string(),
     category: z.string(),
   });
+export const commentschema = () =>
+  z.object({
+    comment: z
+      .string()
+      .min(3, "Comment must be at least 3 characters long.")
+      .max(300, "Comment must be at most 20 characters long."),
+  });
 export const authFormSchema = (type: string) =>
   z.object({
     // sign-up

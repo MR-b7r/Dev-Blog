@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpRightIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { getPostBySearch } from "@/lib/actions/post.actions";
 
 const SearchBar = () => {
   const [posts, setposts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  function handleDeleteSearchTerm() {
+    setSearchTerm("");
+  }
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -30,6 +37,7 @@ const SearchBar = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+
       {posts && (
         <ul className="absolute border border-gray-300 dark:border-gray-700 top-[41px] left-0 right-0 bg-gray-100 dark:bg-gray-800 rounded-md shadow-md w-full md:min-w-[360px] z-50">
           {posts.map((post: Post) => (
@@ -37,7 +45,11 @@ const SearchBar = () => {
               className="p-2 border-b-gray-300 dark:border-b-gray-700 w-full hover:bg-gray-200 dark:hover:bg-gray-700 duration-200"
               key={post.title}
             >
-              <Link href={`post/${post.slug}`} className=" w-full">
+              <Link
+                href={`/post/${post.slug}`}
+                className="w-full"
+                onClick={handleDeleteSearchTerm}
+              >
                 <div className="text-[12px] text-gray-900 dark:text-gray-300">
                   @{post.username}
                 </div>
@@ -50,6 +62,18 @@ const SearchBar = () => {
               </Link>
             </li>
           ))}
+          <li className="px-2 py-1 border-t-gray-400 dark:border-t-gray-800 w-full hover:bg-gray-200 dark:hover:bg-gray-700 duration-200">
+            <Link
+              onClick={handleDeleteSearchTerm}
+              href={`/search`}
+              className=" w-full flex justify-between items-center"
+            >
+              <p className="text-gray-950 dark:text-gray-100 tracking-wide text-[14px]">
+                Open search page
+              </p>
+              <ArrowUpRightIcon className="w-4 font-bold" />
+            </Link>
+          </li>
         </ul>
       )}
     </div>

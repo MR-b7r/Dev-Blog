@@ -4,7 +4,7 @@ import React from "react";
 
 const page = ({ searchParams }: { searchParams: SearchParamProps }) => {
   const filter = {
-    searchTerm: searchParams?.searchTerm!,
+    searchTerm: searchParams?.searchTerm,
     sort: searchParams?.sort,
     category: searchParams?.category,
   };
